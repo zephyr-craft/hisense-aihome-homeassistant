@@ -97,7 +97,7 @@ HISENSE_PHONE='<你的手机号>' HISENSE_PASSWORD='<你的密码>' \
 本仓库根目录的 `SKILL.md` 带 YAML frontmatter，可直接作为 Skill 使用：
 
 ```bash
-git clone https://github.com/910957869/hisense-aihome-homeassistant \
+git clone https://github.com/zephyr-craft/hisense-aihome-homeassistant \
     ~/.workbuddy/skills/hisense-aihome-onboarding
 ```
 
