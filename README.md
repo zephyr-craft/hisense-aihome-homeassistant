@@ -72,6 +72,17 @@ HISENSE_PHONE='<你的手机号>' HISENSE_PASSWORD='<你的密码>' \
 - 命令集是用"错误语义"探测出来的：`Unsupported command` = 名字错、`Missing required action param` = 参数名错、
   `conflictCommand` = 名字对但设备状态拒绝——不用抓包也能摸清命令表
 
+## 安全说明
+
+本仓库**不含任何个人隐私数据或账号凭据**（手机号、密码、HA 令牌、设备序列号、内网 IP 一律没有）。
+
+代码中出现的两个固定密钥（`PORTAL_APP_SECRET`、`AIHOME_SIGN_KEY`）是**海信官方 App 的客户端常量**，
+随 App 分发、可从 APK 提取，并且**早已公开存在于多个开源项目中**（如 `sfairy/ha_hisense`、
+`manymuch/HisenseHA`），因此在本仓库出现不会新增暴露面。
+
+为什么必须保留它们、残留风险到底是什么、以及不想保留时怎么替换，
+都写在 **[SECURITY.md](SECURITY.md)** 里，欢迎先读那篇再判断。
+
 ## 免责声明
 
 - 本项目通过**非官方、逆向得到**的接口与海信云端通信，海信随时可能修改协议导致失效；

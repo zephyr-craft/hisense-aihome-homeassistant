@@ -2,7 +2,22 @@
 __pycache__/
 *.py[cod]
 
-# 运行产物（可能含真实设备信息，勿提交）
+# 本地配置与凭据 —— 切勿提交
+.env
+.env.*
+secrets.yaml
+secrets.yaml.*
+secrets/
+.storage/
+*.token
+*.pem
+*.key
+
+# Home Assistant 运行数据（若误把配置目录放进仓库）
+home-assistant*.db*
+home-assistant*.log*
+
+# 运行产物（可能含真实设备信息）
 probe_report.json
 *.log
 
@@ -12,6 +27,6 @@ Thumbs.db
 .idea/
 .vscode/
 
-# 打包产物（本目录自身被压缩过一份，勿提交）
+# 打包产物（本目录曾被压缩过一份，勿提交）
 *.zip
 *.tar.gz

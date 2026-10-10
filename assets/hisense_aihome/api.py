@@ -8,7 +8,9 @@
 
             ⚠️ 严重陷阱：把 loginName 写成**明文**时，服务端会走进一个**完全不校验密码**的
             旧分支——空密码、乱填密码、甚至不存在的手机号都会返回 resultCode=0 和一个固定
-            的假 token（observation: 永远 cid=5989126）。因此**绝不能**用明文登录，
+            的假身份（该分支固定返回同一个 customerId，与任何真实账号无关，
+            判定方法：用明显错误的密码多试几次，若 customerId 恒为同一个值，即中此陷阱）。
+            因此**绝不能**用明文登录，
             否则会拿到一个"看似成功但根本不是你账号"的身份，表现为"云端 0 设备"。
   2. 家庭   GET  https://api-wg.hismarttv.com/wg/dm/getHomeList   ?accessToken=...
   3. 设备   POST https://iot-aihome.hismarttv.com/4.0/iot/devices/list

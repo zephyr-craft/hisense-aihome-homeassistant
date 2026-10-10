@@ -20,9 +20,28 @@ AIHOME_DEVICES = AIHOME_BASE + "/4.0/iot/devices/list"
 AIHOME_DETAIL = AIHOME_BASE + "/4.0/iot/devices/detail"
 
 PORTAL_APP_KEY = "commonweb"
-PORTAL_APP_SECRET = "MORZRbkuiWxjp+SM4vR_GxY4pZxLZ6rn"
-# 签名密钥来自海信爱家 App(6.4.0.x) 抓包
-AIHOME_SIGN_KEY = "AOSj8JBr0IpUzv5w+hURR6W4oINsI4o5"
+
+# ---------------------------------------------------------------------------
+# 下面两个常量是**海信官方 App 的客户端常量**，不是任何人的账号凭据：
+#   · PORTAL_APP_SECRET：登录时用来派生 AES 密钥/IV，并参与请求签名
+#   · AIHOME_SIGN_KEY  ：爱家接口的请求签名密钥
+# 它们随 App 一起下发到每个客户端，任何人从 APK 里都能提取出来；
+# 并且**早已公开存在于多个开源项目中**（例如 sfairy/ha_hisense 的 utils.py、
+# manymuch/HisenseHA dev 分支的 pyhisenseapi.py），因此在本仓库中出现
+# 并不会新增任何暴露面。详见仓库根目录的 SECURITY.md。
+#
+# 它们能做什么：让第三方客户端能构造合法请求 —— 这正是本项目的用途。
+# 它们不能做什么：访问任何人的账号、冒充用户、读取用户数据（登录仍需用户密码，
+# 且由服务端校验）；本仓库不含任何用户数据。
+#
+# 如果你不放心，或海信更新 App 导致常量失效：
+#   1) 自行抓包 App 流量，替换下面的字符串即可（其余代码无需改动）；
+#   2) 或者把这两行改成从环境变量读取，自行注入：
+#        PORTAL_APP_SECRET = os.getenv("HISENSE_PORTAL_SECRET", "")
+#      注意：这种情况下集成需要用户自己配置好环境变量才能用。
+# ---------------------------------------------------------------------------
+PORTAL_APP_SECRET = "MORZRbkuiWxjp+SM4vR_GxY4pZxLZ6rn"  # noqa: S105 (客户端常量，非用户凭据)
+AIHOME_SIGN_KEY = "AOSj8JBr0IpUzv5w+hURR6W4oINsI4o5"    # noqa: S105 (同上)
 AIHOME_APP_VERSION = "6.4.0.3"
 # App 在列表请求里固定使用的占位 deviceId
 AIHOME_PLACEHOLDER_DEVICE_ID = (
