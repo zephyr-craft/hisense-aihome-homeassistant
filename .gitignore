@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# 运行产物（可能含真实设备信息，勿提交）
+probe_report.json
+*.log
+
+# 编辑器 / 系统
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# 打包产物（本目录自身被压缩过一份，勿提交）
+*.zip
+*.tar.gz

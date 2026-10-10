@@ -1,0 +1,9 @@
+# 仓库内统一用 LF：Home Assistant 跑在 Linux，跨平台协作时避免换行符 churn
+* text=auto eol=lf
+
+# 二进制资源不做换行转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.zip binary

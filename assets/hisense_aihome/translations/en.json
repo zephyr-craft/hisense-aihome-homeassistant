@@ -1,0 +1,37 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Sign in to Hisense AiHome",
+        "description": "Use the account and password of the 海信爱家 (Hisense AiHome) mobile app.",
+        "data": {
+          "username": "Account (phone number)",
+          "password": "Password"
+        }
+      },
+      "home": {
+        "title": "Select home",
+        "description": "All devices in the selected home will be added.",
+        "data": {
+          "home_id": "Home"
+        }
+      },
+      "device": {
+        "title": "Select devices",
+        "description": "{device_count} device(s) found in the cloud. Multi-select is supported.",
+        "data": {
+          "device_ids": "Devices"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "The Hisense account service rejected the credentials (usually errorCode 202012). Please check: (1) whether the password is the one currently used by the 海信爱家 app; (2) whether this account normally signs in with phone + password — if you usually use SMS codes or Huawei/WeChat one-tap login, the account may have no password yet; set one in the app first.",
+      "cannot_connect": "Unable to reach the Hisense cloud. Check your network and retry.",
+      "no_homes": "This account has neither a home nor any device on the Hisense cloud. Sign in to the 海信爱家 (Hisense AiHome) app with the same account and confirm the devices are visible there. 海信爱家 and 海信智慧家 are two separate clouds and their data is not fully interoperable.",
+      "no_devices": "This account has a home but **no bound device** on the Hisense cloud. Pair your appliances in the 海信爱家 app first."
+    },
+    "abort": {
+      "already_configured": "This account home is already configured."
+    }
+  }
+}

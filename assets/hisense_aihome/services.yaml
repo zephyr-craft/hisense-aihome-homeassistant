@@ -1,0 +1,26 @@
+send_command:
+  name: 下发原始指令
+  description: 向海信设备下发一条原始 AIHome 指令，用于使用集成尚未封装的功能。
+  fields:
+    device_id:
+      name: 设备 ID
+      description: 目标设备设备 ID，可在实体属性中查看。
+      required: true
+      example: "<DEVICE_ID>"
+      selector:
+        text:
+    command:
+      name: 指令名
+      description: "可省略 connector.device.command. 前缀，例如 SetWashTemperature"
+      required: true
+      example: "SetWashTemperature"
+      selector:
+        text:
+    params:
+      name: 参数（JSON）
+      description: "指令参数，形如 {\"washTemperature\": {\"value\": 30}}"
+      required: false
+      example: '{"washTemperature": {"value": 30}}'
+      selector:
+        text:
+          multiline: true
