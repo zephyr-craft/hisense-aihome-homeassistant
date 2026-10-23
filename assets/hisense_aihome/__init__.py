@@ -46,6 +46,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         client,
         auth["access_token"],
         auth["customer_id"],
+        # token 会过期（实测数天），必须把凭据交给协调器才能自动续期
+        username=entry.data[CONF_USERNAME],
+        password=entry.data[CONF_PASSWORD],
         scan_interval=entry.data.get(CONF_SCAN_INTERVAL),
     )
     await coordinator.async_config_entry_first_refresh()

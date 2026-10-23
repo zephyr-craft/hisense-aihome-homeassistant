@@ -10,7 +10,11 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.event import async_call_later
 
-from .api import HisenseControlError, HisenseConnectionError
+from .api import (
+    HisenseControlError,
+    HisenseConnectionError,
+    HisenseTokenExpiredError,
+)
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -45,15 +49,19 @@ async def send_command(
     partner_id = info.get("partner_id") or "1001"
 
     try:
-        await store["client"].async_execute(
-            coordinator.access_token,
-            coordinator.customer_id,
+        # 走 coordinator 而不是直接调 client：token 过期时它会自动重登并重试一次
+        await coordinator.async_execute(
             device_id,
             partner_id,
             command,
             params,
             source_name=source_name,
         )
+    except HisenseTokenExpiredError as err:
+        raise HomeAssistantError(
+            f"海信登录凭证已失效且自动重新登录失败：{err}"
+            "（请检查 App 里是否改过密码，或重载集成）"
+        ) from err
     except HisenseControlError as err:
         # 关机态下发设置类命令会得到 conflictCommand（errorcode=7），
         # 明确告诉用户原因，而不是静默失败

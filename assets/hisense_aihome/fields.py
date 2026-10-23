@@ -44,8 +44,8 @@ FIELDS: dict[str, list[dict[str, Any]]] = {
         {"key": "waterLevel", "name": "水位档位", "kind": "num", "unit": "档", "icon": "mdi:waves"},
         {"key": "addRinse", "name": "追加漂洗", "kind": "num", "unit": "次", "icon": "mdi:water-plus"},
         # ---- 能耗 ----
-        {"key": "powerConsumption", "name": "耗电量", "kind": "num", "unit": "kWh", "dc": "energy", "sc": "measurement"},
-        {"key": "waterConsumption", "name": "耗水量", "kind": "num", "unit": "L", "dc": "water", "sc": "measurement"},
+        {"key": "powerConsumption", "name": "耗电量", "kind": "num", "unit": "kWh", "sc": "measurement"},
+        {"key": "waterConsumption", "name": "耗水量", "kind": "num", "unit": "L", "sc": "measurement"},
         {"key": "sterilizationRate", "name": "除菌率", "kind": "num", "unit": "%", "icon": "mdi:shield-check", "sc": "measurement"},
         {"key": "removeMitesRate", "name": "除螨率", "kind": "num", "unit": "%", "icon": "mdi:bug-outline", "sc": "measurement"},
         # ---- 开关 ----
@@ -91,7 +91,7 @@ FIELDS: dict[str, list[dict[str, Any]]] = {
          "values": {k: f"材质{k}（默认{v}分钟）" for k, v in MATERIAL_DEFAULT_MINUTES.items()},
          "format_num": "材质 {v}"},
         # ---- 能耗 / 效果 ----
-        {"key": "powerConsumption", "name": "耗电量", "kind": "num", "unit": "kWh", "dc": "energy", "sc": "measurement"},
+        {"key": "powerConsumption", "name": "耗电量", "kind": "num", "unit": "kWh", "sc": "measurement"},
         {"key": "waterRate", "name": "含水率", "kind": "num", "icon": "mdi:water-percent", "sc": "measurement"},
         {"key": "sterilizationRate", "name": "除菌率", "kind": "num", "unit": "%", "icon": "mdi:shield-check", "sc": "measurement"},
         {"key": "removeMitesRate", "name": "除螨率", "kind": "num", "unit": "%", "icon": "mdi:bug-outline", "sc": "measurement"},

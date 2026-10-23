@@ -8,9 +8,7 @@
 
             ⚠️ 严重陷阱：把 loginName 写成**明文**时，服务端会走进一个**完全不校验密码**的
             旧分支——空密码、乱填密码、甚至不存在的手机号都会返回 resultCode=0 和一个固定
-            的假身份（该分支固定返回同一个 customerId，与任何真实账号无关，
-            判定方法：用明显错误的密码多试几次，若 customerId 恒为同一个值，即中此陷阱）。
-            因此**绝不能**用明文登录，
+            的假 token（observation: 永远 cid=5989126）。因此**绝不能**用明文登录，
             否则会拿到一个"看似成功但根本不是你账号"的身份，表现为"云端 0 设备"。
   2. 家庭   GET  https://api-wg.hismarttv.com/wg/dm/getHomeList   ?accessToken=...
   3. 设备   POST https://iot-aihome.hismarttv.com/4.0/iot/devices/list
@@ -64,6 +62,22 @@ class HisenseConnectionError(Exception):
 
 class HisenseControlError(Exception):
     """指令下发被设备或云端拒绝。"""
+
+
+class HisenseTokenExpiredError(HisenseAuthError):
+    """accessToken 已过期（服务端报 accessToken is illegal）。
+
+    单独成类是为了让协调器能区分「密码错了」（不该反复重试）和
+    「token 到期了」（应当自动重新登录后重试）。
+    """
+
+
+def _is_token_error(text: str | None) -> bool:
+    """判断报错文本是否属于 token 失效。"""
+    if not text:
+        return False
+    t = str(text).lower()
+    return "accesstoken" in t or "access token" in t or "token is illegal" in t
 
 
 def _portal_encrypt(value: str) -> str:
@@ -269,9 +283,15 @@ class HisenseAiHomeClient:
         )
         payload = result.get("payload") or {}
         if payload.get("status") != "SUCCESS":
-            raise HisenseConnectionError(
-                f"获取设备列表失败: {result.get('errorDesc') or payload.get('status')}"
+            desc = str(
+                result.get("errorDesc")
+                or payload.get("errorDesc")
+                or payload.get("status")
+                or ""
             )
+            if _is_token_error(desc):
+                raise HisenseTokenExpiredError(desc)
+            raise HisenseConnectionError(f"获取设备列表失败: {desc}")
 
         devices = []
         for raw in payload.get("devices") or []:
@@ -386,6 +406,8 @@ class HisenseAiHomeClient:
         payload = result.get("payload") or {}
         if payload.get("status") == "SUCCESS":
             return
+        if _is_token_error(payload.get("errorDesc")):
+            raise HisenseTokenExpiredError(str(payload.get("errorDesc")))
         raise HisenseControlError(
             f"{payload.get('errorCode') or result.get('errorDesc') or '未知错误'}"
             f"（{payload.get('errorDesc') or ''}）"
