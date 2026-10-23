@@ -85,6 +85,45 @@ printf '<你的手机号>' | openssl enc -aes-256-cbc -K <key_hex> -iv <iv_hex> 
 
 ---
 
+### A6. HA 里整套设备 `unavailable`，但手机 App 一切正常 ⭐ 最常见
+
+**现象**：集成跑了几天都好好的，某天开始 HA 里所有实体变成 `unavailable`，
+而手机 App 里设备照旧在线、照样能控制。
+
+**先查什么**：`GET /api/error_log`，搜集成 domain。
+
+典型日志：
+
+```
+ERROR (MainThread) [custom_components.hisense_aihome.coordinator]
+  Error fetching hisense_aihome data: 获取设备列表失败: accessToken is illegal
+```
+
+**原因**：海信的 `accessToken` **有有效期（实测数天）**。
+过期后所有接口都返回 `accessToken is illegal`。
+早期版本的集成只持有 token、没有保存账号密码，因此**无法自己重新登录**，
+每轮轮询都失败 → 实体全部不可用。
+手机 App 不受影响，是因为它**每次打开都会重新登录**。
+
+**处理**
+
+1. **立刻恢复**：HA → 设置 → 设备与服务 → 该集成 → ⋮ → **重新加载**
+   （重载会重新走登录流程拿到新 token），或走 API：
+
+   ```bash
+   curl -X POST '<HA_HOST>/api/config/config_entries/entry/<ENTRY_ID>/reload' \
+     -H 'Authorization: Bearer <HA_TOKEN>'
+   ```
+
+2. **根治**：v1.1.0 起协调器会保存账号密码，检测到 token 失效后
+   **自动重新登录并重试一次**（轮询与指令下发都覆盖），不再需要手动重载。
+   如果你用的是更早的版本，请更新。
+
+**排查技巧**：这个症状很容易被误判成"设备离线"或"网络问题"。
+区分方法很简单——**看 App**：App 正常就说明设备与账号都没问题，问题一定在 token。
+
+---
+
 ## B. 云端设备枚举阶段
 
 ### B1. 爱家设备数为 0，但智慧家有家庭
